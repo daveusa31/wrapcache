@@ -13,6 +13,9 @@ from functools import wraps
 from wrapcache.adapter.CacheException import CacheExpiredException
 from wrapcache.adapter.MemoryAdapter import MemoryAdapter
 
+
+default_adapter = MemoryAdapter
+
 '''
 wrapcache: wrap cache
 
@@ -38,41 +41,46 @@ def keyof(function, *args, **kws):
 	'''
 	return _wrap_key(function, args, kws)
 
-def get(key, adapter = MemoryAdapter):
+def get(key, adapter = None):
 	'''
 	get the cache value
 	'''
+	adapter = default_adapter if adapter is None else adapter
 	try:
 		return pickle.loads(adapter().get(key))
 	except CacheExpiredException:
 		return None
 
-def remove(key, adapter = MemoryAdapter):
+def remove(key, adapter = None):
 	'''
 	remove cache by key 
 	'''
+	adapter = default_adapter if adapter is None else adapter
 	return pickle.loads(adapter().remove(key))
 
-def set(key, value, timeout = -1, adapter = MemoryAdapter):
+def set(key, value, timeout = -1, adapter = None):
 	'''
 	set cache by code, must set timeout length
 	'''
+	adapter = default_adapter if adapter is None else adapter
 	if adapter(timeout = timeout).set(key, pickle.dumps(value)):
 		return value
 	else:
 		return None
 
-def flush(adapter = MemoryAdapter):
+def flush(adapter = None):
 	'''
 	clear all the caches
 	'''
+	adapter = default_adapter if adapter is None else adapter
 	return adapter().flush()
 
 
-def wrapcache(timeout = -1, adapter = MemoryAdapter):
+def wrapcache(timeout = -1, adapter = None):
 	'''
 	the Decorator to cache Function.
 	'''
+	adapter = default_adapter if adapter is None else adapter
 	def _wrapcache(function):
 		@wraps(function)
 		def __wrapcache(*args, **kws):
