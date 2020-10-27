@@ -34,7 +34,7 @@ class MemcachedAdapter(BaseAdapter):
             v = self.get(key)
             MemcachedAdapter.db.delete(key)
             return v
-        except CacheExpiredException, _:
+        except CacheExpiredException:
             return False
 
     def flush(self):

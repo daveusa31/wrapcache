@@ -34,7 +34,7 @@ class RedisAdapter(BaseAdapter):
 			v = self.get(key)
 			RedisAdapter.db.delete(key)
 			return v
-		except CacheExpiredException, _:
+		except CacheExpiredException:
 			return False
 
 	def flush(self):
