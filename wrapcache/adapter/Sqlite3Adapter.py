@@ -4,11 +4,11 @@ from wrapcache.adapter.BaseAdapter import BaseAdapter
 from wrapcache.adapter.CacheException import CacheExpiredException, DBNotSetException
 
 
-
 class Sqlite3Adapter(BaseAdapter):
     path = "wrapcache.sqlite3"
     table_name = "wrapcache"
-    def __init__(self, path = None, table_name = None, timeout = -1):
+
+    def __init__(self, path=None, table_name=None, timeout=-1):
         if path is None:
             path = Sqlite3Adapter.path
         if table_name is None:
@@ -21,7 +21,7 @@ class Sqlite3Adapter(BaseAdapter):
         super(Sqlite3Adapter, self).__init__(timeout=timeout)
 
     def get(self, key, check_timeout=True):
-        value = self._sql_execute(self._get_sql, values=(key, ))
+        value = self._sql_execute(self._get_sql, values=(key,))
 
         if check_timeout and time.time() - self._get_or_value(value, "time", 0) > 0:
             self.remove(key)
@@ -39,7 +39,7 @@ class Sqlite3Adapter(BaseAdapter):
 
     def remove(self, key):
         value = self.get(key, check_timeout=False)
-        self._sql_execute(self._del_sql, values=(key, ))
+        self._sql_execute(self._del_sql, values=(key,))
         return value
 
     def flush(self):
@@ -73,12 +73,3 @@ class Sqlite3Adapter(BaseAdapter):
             response = data[-1][number]
 
         return response
-
-
-
-
-
-
-
-
-
