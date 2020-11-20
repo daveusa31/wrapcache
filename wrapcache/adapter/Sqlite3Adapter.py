@@ -23,7 +23,7 @@ class Sqlite3Adapter(BaseAdapter):
     def get(self, key, check_timeout=True):
         value = self._sql_execute(self._get_sql, values=(key,))
 
-        if check_timeout and time.time() - self._get_or_value(value, "time", 0) > 0:
+        if check_timeout and time.time() - self._get_value_or(value, "time", 0) > 0:
             self.remove(key)
             raise CacheExpiredException(key)
         elif check_timeout is False and 0 == len(value):
@@ -62,7 +62,8 @@ class Sqlite3Adapter(BaseAdapter):
         con.close()
         return response
 
-    def _get_or_value(self, data, name, value):
+    @staticmethod
+    def _get_value_or(data, name, value):
         if 0 == len(data):
             response = value
         else:
