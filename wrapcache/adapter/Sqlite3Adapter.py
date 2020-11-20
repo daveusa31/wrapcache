@@ -1,4 +1,3 @@
-import os
 import time
 import sqlite3
 from wrapcache.adapter.BaseAdapter import BaseAdapter
@@ -7,8 +6,15 @@ from wrapcache.adapter.CacheException import CacheExpiredException, DBNotSetExce
 
 
 class Sqlite3Adapter(BaseAdapter):
-    def __init__(self, file_name = "wrapcache.sqlite3", table_name = "wrapcache", timeout = -1):
-        self.path = os.path.abspath(file_name)
+    path = "wrapcache.sqlite3"
+    table_name = "wrapcache"
+    def __init__(self, path = None, table_name = None, timeout = -1):
+        if path is None:
+            path = Sqlite3Adapter.path
+        if table_name is None:
+            table_name = Sqlite3Adapter.table_name
+
+        self.path = path
         self._create_sql_querys(table_name)
         self._sql_execute(self._create_sql)
 
